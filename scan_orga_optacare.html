@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Organisationnel — OptaCare</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Calibri:wght@400;600;700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+  :root {
+    --blue-dark:   #1a3a5c;
+    --blue-mid:    #2a6f8f;
+    --blue-light:  #3d8fb5;
+    --blue-pale:   #e8f2f8;
+    --blue-card:   #dce9f2;
+    --teal:        #28788c;
+    --green:       #2e7d4f;
+    --orange:      #c87820;
+    --red:         #b83232;
+    --text:        #1e2a35;
+    --muted:       #5a6b7a;
+    --border:      #c5d8e8;
+    --bg:          #f4f8fb;
+    --white:       #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', 'Calibri', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    display: grid;
+    grid-template-columns: 42% 58%;
+    min-height: 340px;
+    background: var(--white);
+    border-bottom: 4px solid var(--blue-mid);
+  }
+  .cover-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 40px;
+  }
+  .cover-logo {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--blue-mid);
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .cover-logo span { color: var(--blue-dark); }
+  .cover-tagline {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+  .cover-arc {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 200px; height: 200px;
+    border: 2.5px solid var(--blue-card);
+    border-radius: 50%;
+    transform: translate(-60%, 60%);
+    pointer-events: none;
+  }
+  .cover-right {
+    background: var(--blue-dark);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 48px 48px;
+  }
+  .cover-right::before,
+  .cover-right::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 420px; height: 420px;
+    border: 2px solid rgba(255,255,255,0.18);
+    border-radius: 50%;
+  }
+  .cover-right::after {
+    width: 320px; height: 320px;
+    top: -30px; right: -30px;
+    border-color: rgba(255,255,255,0.10);
+  }
+  .cover-right h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.25;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-right h1 span {
+    display: block;
+    font-size: 18px;
+    font-weight: 400;
+    opacity: 0.85;
+    margin-top: 6px;
+  }
+  .cover-meta {
+    margin-top: 16px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    position: relative;
+    z-index: 1;
+  }
+  .cover-meta strong { color: rgba(255,255,255,0.9); }
+  .cover-confidential {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 3px 10px;
+    border-radius: 2px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── NAV / TOC ── */
+  .toc {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 64px;
+  }
+  .toc-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toc-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--blue-mid);
+    opacity: 0.3;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .toc-card {
+    background: var(--blue-pale);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 18px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s;
+  }
+  .toc-card:hover {
+    border-color: var(--blue-mid);
+    background: var(--blue-card);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(42,111,143,0.12);
+  }
+  .toc-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--blue-mid);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .toc-card h3 { font-size: 13px; font-weight: 700; color: var(--blue-dark); margin-bottom: 4px; }
+  .toc-card p { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+
+  /* ── MAIN LAYOUT ── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 40px 64px 80px; }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 48px 0 24px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-num {
+    width: 36px; height: 36px;
+    background: var(--blue-dark);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue-dark);
+  }
+
+  /* ── CONTENT CARDS ── */
+  .card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 16px; }
+  .card p { font-size: 14px; line-height: 1.65; margin-bottom: 8px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* ── TWO-COL GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  /* ── RECO BOX ── */
+  .reco {
+    background: #eef6f0;
+    border-left: 4px solid var(--green);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    margin: 10px 0 8px;
+    font-size: 13.5px;
+  }
+  .reco strong { color: var(--green); font-weight: 700; }
+
+  /* ── QUESTION BOX ── */
+  .question {
+    background: #fdf5e8;
+    border-left: 4px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    margin: 10px 0 8px;
+    font-size: 13.5px;
+  }
+  .question strong { color: var(--orange); font-weight: 700; }
+
+  /* ── RISK BOX ── */
+  .risk {
+    background: #fdf0f0;
+    border-left: 4px solid var(--red);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    margin: 10px 0 8px;
+    font-size: 13.5px;
+  }
+  .risk strong { color: var(--red); font-weight: 700; }
+
+  /* ── EXECUTIVE SUMMARY GRID ── */
+  .exec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .exec-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 22px;
+  }
+  .exec-card-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .exec-card-title.green { color: var(--green); }
+  .exec-card-title.red   { color: var(--red); }
+  .exec-card-title.blue  { color: var(--blue-mid); }
+  .exec-card ul { padding-left: 18px; }
+  .exec-card li { font-size: 13.5px; line-height: 1.6; margin-bottom: 5px; }
+
+  /* ── SCENARIOS ── */
+  .scenarios { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .scenario-card {
+    border-radius: 8px;
+    padding: 22px;
+    border: 1.5px solid;
+  }
+  .scenario-card.good  { background: #eef6f0; border-color: #9dceb0; }
+  .scenario-card.bad   { background: #fdf5e8; border-color: #e8c580; }
+  .scenario-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+  .scenario-card.good h4 { color: var(--green); }
+  .scenario-card.bad h4  { color: var(--orange); }
+  .scenario-card p { font-size: 13.5px; line-height: 1.6; }
+
+  /* ── SCORING TABLE ── */
+  .scoring-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 16px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+  .scoring-table thead tr {
+    background: var(--blue-dark);
+    color: var(--white);
+  }
+  .scoring-table th {
+    padding: 12px 14px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .scoring-table th:first-child { text-align: left; }
+  .scoring-table td {
+    padding: 10px 14px;
+    text-align: center;
+    border-bottom: 1px dashed var(--border);
+  }
+  .scoring-table td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: var(--blue-mid);
+  }
+  .scoring-table tbody tr:last-child td { border-bottom: none; }
+  .scoring-table tbody tr:nth-child(even) { background: var(--blue-pale); }
+  .dot {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+  }
+  .dot.green  { background: var(--green); }
+  .dot.orange { background: var(--orange); }
+  .dot.red    { background: var(--red); }
+  .legend {
+    display: flex;
+    gap: 20px;
+    font-size: 12.5px;
+    margin-top: 10px;
+    color: var(--muted);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+
+  /* ── INTERVIEWS LIST ── */
+  .interviews {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .interview-card {
+    background: var(--blue-pale);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .interview-name { font-size: 14px; font-weight: 700; color: var(--blue-dark); }
+  .interview-role { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  /* ── KPI ROW ── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .kpi-box {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .kpi-value { font-size: 26px; font-weight: 700; color: var(--blue-mid); line-height: 1; }
+  .kpi-label { font-size: 11.5px; color: var(--muted); margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ── RECRUTEMENTS ── */
+  .recru-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .recru-dept {
+    background: var(--blue-pale);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+  }
+  .recru-dept h5 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--blue-mid); font-weight: 700; margin-bottom: 6px; }
+  .recru-dept ul { padding-left: 16px; }
+  .recru-dept li { font-size: 13px; line-height: 1.5; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--blue-dark);
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    font-size: 11.5px;
+    padding: 18px;
+    margin-top: 60px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── SEPARATEUR SECTION ── */
+  .section-divider {
+    background: var(--blue-dark);
+    color: var(--white);
+    padding: 16px 64px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 48px -64px 0;
+  }
+
+  ul.bullets { padding-left: 20px; margin: 8px 0; }
+  ul.bullets li { font-size: 14px; line-height: 1.65; margin-bottom: 5px; }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 6px;
+  }
+  .tag.urgent { background: #fce8e8; color: var(--red); border: 1px solid #f0b8b8; }
+  .tag.short  { background: #fdf5e8; color: var(--orange); border: 1px solid #ecc880; }
+  .tag.mid    { background: #eef6f0; color: var(--green); border: 1px solid #9dceaf; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LOGIN GATE ═══════════════ -->
+<div id="login-gate" style="
+  position:fixed; inset:0; z-index:9999;
+  background: linear-gradient(135deg, #1a3a5c 0%, #2a6f8f 100%);
+  display:flex; align-items:center; justify-content:center;
+">
+  <!-- arc déco -->
+  <div style="position:absolute;top:-120px;right:-120px;width:480px;height:480px;border:2px solid rgba(255,255,255,0.08);border-radius:50%;pointer-events:none;"></div>
+  <div style="position:absolute;top:-60px;right:-60px;width:320px;height:320px;border:2px solid rgba(255,255,255,0.05);border-radius:50%;pointer-events:none;"></div>
+  <div style="position:absolute;bottom:-100px;left:-100px;width:360px;height:360px;border:2px solid rgba(255,255,255,0.06);border-radius:50%;pointer-events:none;"></div>
+
+  <div style="
+    background:white; border-radius:12px; padding:44px 48px;
+    width:100%; max-width:420px; box-shadow:0 24px 60px rgba(0,0,0,0.3);
+    position:relative;
+  ">
+    <!-- Logo -->
+    <div style="text-align:center; margin-bottom:28px;">
+      <div style="font-size:28px; font-weight:700; color:#2a6f8f; letter-spacing:-0.5px;">E<span style="font-size:0.6em;vertical-align:middle;">✕</span>tens</div>
+      <div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:#5a6b7a; margin-top:4px;">Accès confidentiel</div>
+      <div style="height:1px; width:60px; background:#2a6f8f; margin:14px auto 0; opacity:0.4;"></div>
+    </div>
+
+    <div style="margin-bottom:18px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#1a3a5c; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px;">Nom d'utilisateur</label>
+      <input id="login-user" type="text" autocomplete="username"
+        style="width:100%; padding:11px 14px; border:1.5px solid #c5d8e8; border-radius:6px; font-size:14px; font-family:inherit; outline:none; color:#1e2a35; transition:border-color 0.15s;"
+        onfocus="this.style.borderColor='#2a6f8f'" onblur="this.style.borderColor='#c5d8e8'"
+        placeholder="Nom d'utilisateur" onkeydown="if(event.key==='Enter')document.getElementById('login-pwd').focus()">
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <label style="display:block; font-size:12px; font-weight:700; color:#1a3a5c; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px;">Mot de passe</label>
+      <div style="position:relative;">
+        <input id="login-pwd" type="password" autocomplete="current-password"
+          style="width:100%; padding:11px 40px 11px 14px; border:1.5px solid #c5d8e8; border-radius:6px; font-size:14px; font-family:inherit; outline:none; color:#1e2a35; transition:border-color 0.15s;"
+          onfocus="this.style.borderColor='#2a6f8f'" onblur="this.style.borderColor='#c5d8e8'"
+          placeholder="Mot de passe" onkeydown="if(event.key==='Enter')tryLogin()">
+        <span onclick="togglePwd()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;color:#5a6b7a;user-select:none;" title="Afficher/masquer">👁</span>
+      </div>
+    </div>
+
+    <div id="login-error" style="display:none; background:#fdf0f0; border:1px solid #f0b8b8; color:#b83232; font-size:13px; padding:10px 14px; border-radius:6px; margin-bottom:16px;">
+      Identifiants incorrects. Veuillez réessayer.
+    </div>
+
+    <button onclick="tryLogin()" style="
+      width:100%; padding:13px; background:#1a3a5c; color:white;
+      border:none; border-radius:6px; font-size:14px; font-weight:700;
+      font-family:inherit; cursor:pointer; letter-spacing:0.3px;
+      transition:background 0.15s;
+    " onmouseover="this.style.background='#2a6f8f'" onmouseout="this.style.background='#1a3a5c'">
+      Accéder au document →
+    </button>
+
+    <p style="text-align:center; font-size:11.5px; color:#8a9baa; margin-top:20px; line-height:1.5;">
+      Document confidentiel · Diffusion restreinte<br>Extens — Scan Organisationnel OptaCare 2026
+    </p>
+  </div>
+</div>
+
+<div id="main-content" style="display:none;">
+
+<script>
+function tryLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pwd').value;
+  const err = document.getElementById('login-error');
+  if (u === 'Optacare2026' && p === 'ExtenseOptacare2026?!') {
+    document.getElementById('login-gate').style.opacity = '0';
+    document.getElementById('login-gate').style.transition = 'opacity 0.4s';
+    setTimeout(() => {
+      document.getElementById('login-gate').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+    }, 400);
+    try { sessionStorage.setItem('auth','1'); } catch(e){}
+  } else {
+    err.style.display = 'block';
+    document.getElementById('login-pwd').value = '';
+    document.getElementById('login-pwd').style.borderColor = '#f0b8b8';
+    setTimeout(() => document.getElementById('login-pwd').style.borderColor = '#c5d8e8', 2000);
+  }
+}
+function togglePwd() {
+  const f = document.getElementById('login-pwd');
+  f.type = f.type === 'password' ? 'text' : 'password';
+}
+// Auto-restore session
+if (sessionStorage.getItem('auth') === '1') {
+  document.getElementById('login-gate').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+}
+</script>
+
+<!-- ═══════════════ COVER ═══════════════ -->
+<div class="cover">
+  <div class="cover-left" style="position:relative; overflow:hidden;">
+    <div class="cover-logo">E<span style="font-size:0.6em; vertical-align:middle;">✕</span>tens</div>
+    <div class="cover-tagline">Cabinet de conseil en investissement</div>
+    <div style="height:1px; width:80px; background:var(--blue-mid); margin-bottom:20px;"></div>
+    <p style="font-size:13px; color:var(--muted); line-height:1.6;">Arnaud Houette &amp; Kévin Mainaud<br>28–29 avril 2026</p>
+    <div class="cover-arc"></div>
+  </div>
+  <div class="cover-right">
+    <h1>Scan Organisationnel
+      <span>OptaCare</span>
+    </h1>
+    <div class="cover-meta">
+      Réalisé par <strong>Extens</strong> · Avril 2026
+    </div>
+    <div class="cover-confidential">Diffusion strictement limitée</div>
+  </div>
+</div>
+
+<!-- ═══════════════ SOMMAIRE ═══════════════ -->
+<div class="toc">
+  <div class="toc-title">Sommaire</div>
+  <div class="toc-grid">
+    <a class="toc-card" href="#contexte">
+      <div class="toc-num">1</div>
+      <h3>Contexte &amp; Méthodologie</h3>
+      <p>Objectifs, conditions de réalisation, personnes interrogées</p>
+    </a>
+    <a class="toc-card" href="#financier">
+      <div class="toc-num">2</div>
+      <h3>Analyse Financière</h3>
+      <p>Revenus, charges, cash-flows, besoin de financement</p>
+    </a>
+    <a class="toc-card" href="#strategie">
+      <div class="toc-num">3</div>
+      <h3>Marché &amp; Stratégie</h3>
+      <p>Opportunité de marché, positionnement, scénarios</p>
+    </a>
+    <a class="toc-card" href="#organisation">
+      <div class="toc-num">4</div>
+      <h3>Organisation</h3>
+      <p>Structure, management, KPI, évolutions à prévoir</p>
+    </a>
+    <a class="toc-card" href="#operationnel">
+      <div class="toc-num">5</div>
+      <h3>Performance Opérationnelle</h3>
+      <p>Delivery, Marketing, Product, QA, Support, R&amp;D, Commercial</p>
+    </a>
+    <a class="toc-card" href="#levee">
+      <div class="toc-num">6</div>
+      <h3>Levée de Fonds</h3>
+      <p>Equity story, Business Plan, questions ouvertes</p>
+    </a>
+    <a class="toc-card" href="#questions">
+      <div class="toc-num">7</div>
+      <h3>Récapitulatif des Questions</h3>
+      <p>Toutes les questions ouvertes adressées à la Direction</p>
+    </a>
+    <a class="toc-card" href="#recos">
+      <div class="toc-num">8</div>
+      <h3>Récapitulatif des Recos</h3>
+      <p>Toutes les recommandations priorisées par échéance</p>
+    </a>
+    <a class="toc-card" href="#pmo">
+      <div class="toc-num">9</div>
+      <h3>Plan PMO — Suivi des tâches</h3>
+      <p>Tableau de bord interactif de suivi d'avancement</p>
+    </a>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ═══════════════ NOTE LIMINAIRE ═══════════════ -->
+  <div class="risk" style="margin-top:32px;">
+    <strong>Note liminaire —</strong> Ce document ne prétend pas à être exhaustif. Le format condensé (quelques entretiens d'une heure) et le cycle court (rendu sous 1 semaine) répond à l'objectif de permettre à la société d'identifier ses sujets prioritaires et de disposer d'options pour décider. Il appartient à la Direction et au Conseil de Surveillance d'approfondir cette réflexion et de prendre les décisions qui s'imposent.
+  </div>
+
+  <!-- ═══════════════ 1 — CONTEXTE ═══════════════ -->
+  <div id="contexte" class="section-header">
+    <div class="section-num">1</div>
+    <h2>Contexte &amp; Méthodologie</h2>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-box">
+      <div class="kpi-value">6</div>
+      <div class="kpi-label">Interviews menées</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-value">1h</div>
+      <div class="kpi-label">Par entretien</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-value">2j</div>
+      <div class="kpi-label">Réalisation sur site</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-value">&lt;7j</div>
+      <div class="kpi-label">Délai de rendu</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title"><span class="icon">🎯</span> Objectifs</div>
+    <ul class="bullets">
+      <li>Comprendre l'état des lieux de la société et identifier les éventuels risques ou insuffisances opérationnelles.</li>
+      <li>Proposer des actions correctives si besoin.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title"><span class="icon">📊</span> Contexte de la mission</div>
+    <ul class="bullets">
+      <li>Opta a réalisé une année 2025 exceptionnelle dans le cadre des AMI <em>« IA pour la gestion des RH »</em> et <em>« IA aux urgences »</em>, ce qui accélère considérablement le développement.</li>
+      <li><strong>HR Planner :</strong> 25 bons de commande signés + 15 engagements prospects (40 au total)</li>
+      <li><strong>Predict :</strong> 15 comptes signés</li>
+      <li>La trésorerie se tend fortement (~42 k€ fin 2025) ; un besoin de financement est exprimé pour 2026, Extens est sollicité pour apporter en compte courant.</li>
+      <li>Le Business Plan réalisé début 2026 annonce une très forte croissance : <strong>2,4 M€ CA en 2026</strong> → <strong>5 M€ en 2027</strong> → <strong>7,75 M€ en 2028</strong></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">👥</span> Personnes interrogées</div>
+    <div class="interviews">
+      <div class="interview-card"><div class="interview-name">Hicham</div><div class="interview-role">Président</div></div>
+      <div class="interview-card"><div class="interview-name">Aurélie</div><div class="interview-role">Directrice Générale</div></div>
+      <div class="interview-card"><div class="interview-name">Allan</div><div class="interview-role">CSO – Chief Sales Officer</div></div>
+      <div class="interview-card"><div class="interview-name">Thierry / Éloïse</div><div class="interview-role">Équipe Delivery</div></div>
+      <div class="interview-card"><div class="interview-name">Alexandre</div><div class="interview-role">CPO &amp; Responsable Frontend</div></div>
+      <div class="interview-card"><div class="interview-name">Zakaria</div><div class="interview-role">Responsable Data</div></div>
+      <div class="interview-card"><div class="interview-name">Patrick</div><div class="interview-role">Resp. R&amp;D / PO Predict &amp; Stock</div></div>
+      <div class="interview-card"><div class="interview-name">Yasmine</div><div class="interview-role">Resp. R&amp;D / PO HR Planner &amp; HDJ</div></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 2 — FINANCIER ═══════════════ -->
+  <div id="financier" class="section-header">
+    <div class="section-num">2</div>
+    <h2>Analyse Financière</h2>
+  </div>
+
+  <div class="exec-grid">
+    <div class="exec-card" style="border-color:#9dceb0; border-top: 3px solid var(--green);">
+      <div class="exec-card-title green">✦ Revenus 2026 : crédibles</div>
+      <p style="font-size:13.5px; line-height:1.65;">Le management table sur <strong>2,4 M€</strong> en 2026 (vs 1 M€ en 2025). Hicham affiche une « certitude » de faire au moins 2 M€, dont 1,6 M€ au titre des AMI. L'estimation est jugée crédible — les AMI devraient représenter ~1,4 M€.</p>
+      <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div style="background:var(--blue-pale); border-radius:6px; padding:10px; text-align:center;">
+          <div style="font-size:20px; font-weight:700; color:var(--blue-mid);">~34%</div>
+          <div style="font-size:11px; color:var(--muted);">HR Planner</div>
+        </div>
+        <div style="background:var(--blue-pale); border-radius:6px; padding:10px; text-align:center;">
+          <div style="font-size:20px; font-weight:700; color:var(--blue-mid);">~35%</div>
+          <div style="font-size:11px; color:var(--muted);">Predict</div>
+        </div>
+        <div style="background:var(--blue-pale); border-radius:6px; padding:10px; text-align:center;">
+          <div style="font-size:20px; font-weight:700; color:var(--blue-mid);">~25%</div>
+          <div style="font-size:11px; color:var(--muted);">Stock</div>
+        </div>
+        <div style="background:var(--blue-pale); border-radius:6px; padding:10px; text-align:center;">
+          <div style="font-size:20px; font-weight:700; color:var(--blue-mid);">~6%</div>
+          <div style="font-size:11px; color:var(--muted);">HDJ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exec-card" style="border-color:#f0b8b8; border-top: 3px solid var(--red);">
+      <div class="exec-card-title red">✖ Revenus 2027 : très incertains</div>
+      <p style="font-size:13.5px; line-height:1.65;">Les subventions AMI couvrent l'année 2026. Au-delà, les établissements devront décider de pérenniser. Le management estime que <strong>70 % des clients</strong> pérenniseront, mais notre analyse suggère que, sans actions proactives, la majorité optera pour le <em>non-choix</em> et mettra les pilotes en pause.</p>
+      <div class="reco" style="margin-top:12px;"><strong>RECO (juin 2026) :</strong> Mettre en œuvre <em>urgemment</em> les mesures Delivery, Marketing et Product Management pour assurer la pérennisation/extension des sites en 2027.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">👔</span> Recrutements 2026 prévus — 7 postes</div>
+    <div class="recru-list">
+      <div class="recru-dept">
+        <h5>R&amp;D &amp; Tech (5 postes)</h5>
+        <ul>
+          <li>Ing. R&amp;D RO / Data</li>
+          <li>Ing. DevSecOps</li>
+          <li>Développeur Back-End</li>
+          <li>Ingénieur Réseau</li>
+          <li>Ingénieur QA</li>
+        </ul>
+      </div>
+      <div class="recru-dept">
+        <h5>Delivery (2 postes)</h5>
+        <ul>
+          <li>Chef de projet</li>
+          <li>Ing. Interopérabilité</li>
+        </ul>
+      </div>
+    </div>
+    <div class="question"><strong>Questions :</strong> Ces recrutements intègrent-ils les 2 fonctionnalités majeures manquantes (replanification, gestion des cycles) et les connecteurs Dedalus/NUMIH ? Est-il pertinent de recruter 5/7 FTEs en R&amp;D/Tech alors que le Delivery n'est pas industrialisé et que le Support Client est inexistant ?</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">💰</span> Cash-flows — Retour sous contrôle, à surveiller</div>
+    <p>La société a vécu de graves difficultés à se faire payer en 2024–2025, essentiellement du fait des délais des centrales d'achat et des hôpitaux. Deux mesures sont en cours :</p>
+    <ul class="bullets" style="margin-top:8px;">
+      <li><strong>Factoring :</strong> paiement de 90 % des factures sous 24h.</li>
+      <li><strong>Jalons de facturation :</strong> facturation plus précoce et PV de recettage sécurisés.</li>
+    </ul>
+    <p style="margin-top:8px;">La modélisation des cash-flows dans le BP paraît crédible. <em>Le besoin de financement 2026–2027 n'est pas encore finalisé — attendu dans les prochains jours.</em></p>
+  </div>
+
+  <!-- ═══════════════ 3 — STRATÉGIE ═══════════════ -->
+  <div id="strategie" class="section-header">
+    <div class="section-num">3</div>
+    <h2>Marché &amp; Stratégie</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🚀</span> Opportunité de marché exceptionnelle</div>
+    <p>Opta bénéficie d'une opportunité unique : 4 solutions correspondant à 4 priorités du système de santé français, lancées au moment parfait.</p>
+    <div class="grid-2" style="margin-top:14px;">
+      <div style="background:var(--blue-pale); border-radius:6px; padding:14px 16px;">
+        <div style="font-weight:700; color:var(--blue-dark); margin-bottom:6px;">🏥 HR Planner</div>
+        <p style="font-size:13px;">Optimisation des plannings hospitaliers — priorité très élevée pour les DG, 126 établissements ont déposé un dossier AMI.</p>
+      </div>
+      <div style="background:var(--blue-pale); border-radius:6px; padding:14px 16px;">
+        <div style="font-weight:700; color:var(--blue-dark); margin-bottom:6px;">🚨 Predict</div>
+        <p style="font-size:13px;">Prévision des admissions en SAU — sujet critique de notoriété publique, AMI déclenché en 2025.</p>
+      </div>
+      <div style="background:var(--blue-pale); border-radius:6px; padding:14px 16px;">
+        <div style="font-weight:700; color:var(--blue-dark); margin-bottom:6px;">📦 Stock</div>
+        <p style="font-size:13px;">Optimisation des stocks médicamenteux et non-médicamenteux — enjeu chiffrable en dizaines de millions d'euros.</p>
+      </div>
+      <div style="background:var(--blue-pale); border-radius:6px; padding:14px 16px;">
+        <div style="font-weight:700; color:var(--blue-dark); margin-bottom:6px;">🏨 HDJ</div>
+        <p style="font-size:13px;">Gestion de l'hospitalisation de jour — tous les établissements sont en dessous des objectifs ministériels en taux d'ambulatoire.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🔀</span> Deux scénarios possibles</div>
+    <div class="scenarios">
+      <div class="scenario-card good">
+        <h4>🌟 La grande histoire</h4>
+        <p>Opta réussit ses pilotes HR Planner en 2026, construit les arguments de la pérennisation, pérennise une majorité de pilotes en 2027 et devient leader du marché. Dans 5 ans, l'offre couvre d'autres problématiques ; Opta est un acteur clé de la performance hospitalière avec un CA de <strong>17 M€</strong>.</p>
+      </div>
+      <div class="scenario-card bad">
+        <h4>⚠️ La petite histoire</h4>
+        <p>Opta réussit ses pilotes mais ne réussit pas à construire les arguments de la pérennisation. Les pilotes sont discontinués et peu reprennent. Dans 5 ans, Opta est un éditeur de <strong>4–7 M€ de CA</strong>, parmi beaucoup d'autres.</p>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--muted); font-style:italic; margin-top:4px;">La transformation des pilotes en CA pérenne est loin d'être acquise — les actions prises en 2026 seront déterminantes.</p>
+  </div>
+
+  <!-- ═══════════════ 4 — ORGANISATION ═══════════════ -->
+  <div id="organisation" class="section-header">
+    <div class="section-num">4</div>
+    <h2>Organisation</h2>
+  </div>
+
+  <div class="exec-grid">
+    <div class="exec-card" style="border-top: 3px solid var(--green);">
+      <div class="exec-card-title green">✦ Points forts</div>
+      <ul>
+        <li>Organisation globalement fonctionnelle — tous les interviewés expriment une satisfaction.</li>
+        <li>Le duo <strong>Hicham – Aurélie</strong> fonctionne bien, avec une répartition claire Président / DG.</li>
+        <li>Managers de rang 1 au niveau attendu.</li>
+        <li>Implication forte des équipes, état d'esprit très positif.</li>
+        <li>Hypertrophie technique (60 % de l'effectif en R&amp;D/Tech) compréhensible au stade actuel.</li>
+      </ul>
+    </div>
+    <div class="exec-card" style="border-top: 3px solid var(--orange);">
+      <div class="exec-card-title" style="color:var(--orange);">⚠️ Évolutions attendues</div>
+      <ul>
+        <li><strong>QA :</strong> quasi inexistante — à renforcer rapidement.</li>
+        <li><strong>Delivery :</strong> à renforcer pour faire face à la montée en charge.</li>
+        <li><strong>Support technique :</strong> inexistant aujourd'hui, deviendra indispensable.</li>
+        <li><strong>KPI CODIR :</strong> absence de tableau de bord mensuel partagé.</li>
+      </ul>
+      <div class="reco" style="margin-top:12px;"><strong>RECO (mai 2026) :</strong> Établir un tableau de bord mensuel (prises de commande, pipeline, métriques AMI, roadmap, finances…)</div>
+      <div class="reco"><strong>RECO (juin 2026) :</strong> Resserrer les Boards sur un rythme trimestriel et partager le tableau de bord avec Extens.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 5 — PERFORMANCE OPÉRATIONNELLE ═══════════════ -->
+  <div id="operationnel" class="section-header">
+    <div class="section-num">5</div>
+    <h2>Performance Opérationnelle</h2>
+  </div>
+
+  <!-- Delivery -->
+  <div class="card">
+    <div class="card-title" style="font-size:16px; color:var(--blue-dark);">📦 Delivery — Gros risque malgré une excellente prise en charge actuelle</div>
+    <p>Sous la direction d'Aurélie et menés par Éloïse, <strong>90 % des 25 déploiements AMI HR Planner</strong> seront réalisés en mai 2026 — une performance remarquable. L'arrivée de Thierry renforce la capacité à faire aboutir les projets.</p>
+    <div class="risk" style="margin-top:10px;"><strong>Risque :</strong> Les déploiements actuels ne suffiront pas s'ils ne sont pas suivis d'une adoption réelle par les clients. Il faut absolument que les équipes deviennent utilisatrices et intègrent HR Planner à leurs process.</div>
+    <div class="reco"><strong>RECO (juin 2026) :</strong> Données réelles en remplacement des données fictives, formation continue, copils mensuels d'adoption, logs d'utilisation avec alertes, support technique de qualité.</div>
+    <div class="reco"><strong>RECO (mai 2026) :</strong> Nommer un <strong>CSM</strong> dédié au succès des déploiements (HR Planner et Predict), avec objectif de préparer les clients à la pérennisation en 2027.</div>
+    <div class="reco"><strong>RECO (juin 2026) :</strong> Définir des métriques de réussite pour les projets AMI (commandes additionnelles, logs, tickets, taux de transformation).</div>
+    <div class="reco"><strong>RECO (septembre 2026) :</strong> Mandater un cabinet spécialisé en mesure de ROI à coût mutualisé pour les 25 sites.</div>
+    <div class="question"><strong>Question :</strong> Quels sont les quick wins à aller chercher sur Predict ?</div>
+  </div>
+
+  <!-- Marketing -->
+  <div class="card">
+    <div class="card-title" style="font-size:16px; color:var(--blue-dark);">📣 Marketing — Action bien menée, à renforcer pour assurer la pérennisation</div>
+    <p>Gaëlle maîtrise bien son sujet. L'équilibre présentiel (salons) / digital (webinaires, contenus) est bien réalisé. Une communication forte doit néanmoins être envisagée en 2026 pour assurer une visibilité sur les succès d'HR Planner au niveau des COMEX clients.</p>
+    <div class="reco"><strong>RECO (mai 2026) :</strong> Un post LinkedIn pour chaque client satisfait — objectif : 40 à 50 posts en 2026.</div>
+    <div class="reco"><strong>RECO (mai 2026) :</strong> Plus de contenus sur les succès (ROI, témoignages utilisateurs) sur les réseaux sociaux.</div>
+  </div>
+
+  <!-- Product Management -->
+  <div class="card">
+    <div class="card-title" style="font-size:16px; color:var(--blue-dark);">🗺 Product Management — Organisation atypique mais fonctionnelle</div>
+    <p>La séparation CPO (Alexandre) / PO–R&amp;D (Yasmine et Patrick) peut inquiéter, mais semble fonctionner. Yasmine et Patrick passent beaucoup de temps client — très important. Alexandre applique les bonnes méthodologies de gouvernance produit.</p>
+    <div class="reco"><strong>RECO :</strong> Laisser comme ça, tant que ça marche.</div>
+    <div class="risk"><strong>Risque :</strong> La roadmap HR Planner n'inclut pas des fonctionnalités <em>critiques</em> : gestion des replanifications, gestion des cycles, connecteurs GTT NUMIH et Dedalus — absolument nécessaires pour l'adoption pérenne suite aux pilotes. Les décisions clients se prendront dès fin 2026 (préparations budgétaires 2027).</div>
+    <div class="reco"><strong>RECO (octobre 2026) :</strong> Livrer les fonctionnalités critiques HR Planner en s'appuyant sur des ressources externes.</div>
+    <div class="reco"><strong>RECO (fin 2026) :</strong> Mettre en place la méthodologie <strong>RICE</strong> pour prioriser les besoins clients.</div>
+    <div class="reco"><strong>RECO (fin 2026) :</strong> Structurer 2 squads dédiées (PO + devs attitrés) pour améliorer la vélocité et la priorisation entre les 4 logiciels.</div>
+    <div class="risk"><strong>Risque :</strong> La roadmap Predict (et Stock, HDJ) risque d'être dépriorisée au profit de HR Planner, faute de moyens — ce qui mettrait en danger le futur.</div>
+  </div>
+
+  <!-- QA -->
+  <div class="card">
+    <div class="card-title" style="font-size:16px; color:var(--blue-dark);">🔬 QA — Déficit majeur, risque fort de dette technique</div>
+    <p>Une seule personne en charge de la QA (Alexandre), fraîchement arrivé et focalisé sur les tests en sites clients. Il n'existe donc pas de QA au sens éditeur logiciel (tests unitaires, fonctionnels, performance, sécurité). Les bugs seront découverts par les clients — risque majeur.</p>
+    <div class="reco"><strong>RECO (mai 2026) :</strong> Renforcer les ressources QA et les intégrer en R&amp;D ou, de préférence, avec le CPO.</div>
+    <div class="reco"><strong>RECO (juillet 2026) :</strong> Mettre en place un outil d'analyse statique (<strong>SonarQube</strong> recommandé) pour améliorer la qualité en pré-prod et prod.</div>
+  </div>
+
+  <!-- Support -->
+  <div class="card">
+    <div class="card-title" style="font-size:16px; color:var(--blue-dark);">🎧 Support Technique — Absent, à anticiper rapidement</div>
+    <p>Dans la situation actuelle avec peu de clients installés, c'est encore gérable. Mais la montée en régime de HR Planner et Predict va créer des besoins rapidement.</p>
+    <div class="reco"><strong>RECO (juillet 2026) :</strong> Prévoir une personne dédiée (temps partagé avec le Delivery au départ).</div>
+    <div class="reco"><strong>RECO (septembre 2026) :</strong> Prévoir un <strong>agent IA</strong> pour le traitement des tickets.</div>
+  </div>
+
+  <!-- R&D / Développement produit -->
+  <div class="card">
+    <div class="card-title" style="font-size:16px; color:var(--blue-dark);">⚙️ Développement Produit — Organisation bien structurée, vigilance sur l'interopérabilité</div>
+    <p>Les équipes R&amp;D (Yasmine, Patrick), Front (Alexandre) et Back (Han) sont spécialisées et fonctionnent bien. L'équipe Data (Zakaria) gère l'interopérabilité — sujet éminemment complexe. Zakaria doit se préparer à des projets difficiles, des clients inefficaces et des éditeurs réfractaires.</p>
+    <div class="risk"><strong>Risque :</strong> Les équipes n'utilisent <strong>aucun LLM connecté à la codebase</strong> — manque à gagner important en productivité. Le risque de fuite de code n'est pas avéré (OpenAI et Claude s'engagent à ne pas réutiliser les données en licences professionnelles).</div>
+    <div class="reco"><strong>RECO (mai 2026) :</strong> Envisager <strong>Claude Code</strong> pour le développement / R&amp;D.</div>
+    <div class="reco"><strong>RECO (mai 2026) :</strong> Formaliser la répartition des responsabilités Data / Back-end / SSI.</div>
+    <div class="reco"><strong>RECO (décembre 2026) :</strong> Préparer un soutien à Zakaria avec des ressources Delivery complémentaires pour éviter que les projets d'intégration ne s'enlisent.</div>
+  </div>
+
+  <!-- Commercial -->
+  <div class="card">
+    <div class="card-title" style="font-size:16px; color:var(--blue-dark);">💼 Commercial — Dispositif bien calibré, opportunité HOP'EN 2 urgente</div>
+    <p>Alan est seul commercial mais Hicham et Élodie participent activement. Le dispositif est bien calibré à ce stade.</p>
+    <div class="risk"><strong>HOP'EN 2 :</strong> Dispositif de financement à 100 %, enveloppe globale 87 M€, deadline <strong>29 mai 2026</strong>. Aucun établissement ne s'est manifesté spontanément à J−30.</div>
+    <div class="reco"><strong>RECO (mai 2026) :</strong> Sécuriser au moins 5 prospects avec une communication proactive durant mai 2026, avec l'aide d'Hicham et Aurélie.</div>
+  </div>
+
+  <!-- ═══════════════ 6 — LEVÉE DE FONDS ═══════════════ -->
+  <div id="levee" class="section-header">
+    <div class="section-num">6</div>
+    <h2>Levée de Fonds</h2>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">📈</span> État d'avancement</div>
+    <p>Alexandre Azan pilote la préparation. Le deck est en cours de finalisation. Le Business Plan reste à finaliser.</p>
+    <div class="question">
+      <strong>Questions ouvertes :</strong>
+      <ul class="bullets" style="margin-top:6px;">
+        <li>Quelle equity story ? Quelle exit ?</li>
+        <li>Quel BP en interne, notamment au vu des incertitudes sur les revenus 2027 ?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 7 — QUESTIONS ═══════════════ -->
+  <div id="questions" class="section-header">
+    <div class="section-num">7</div>
+    <h2>Récapitulatif des Questions</h2>
+  </div>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse; font-size:13.5px;">
+      <thead>
+        <tr style="background:var(--blue-dark); color:white;">
+          <th style="padding:11px 14px; text-align:left; font-weight:700; width:14%;">Domaine</th>
+          <th style="padding:11px 14px; text-align:left; font-weight:700;">Question ouverte</th>
+          <th style="padding:11px 14px; text-align:left; font-weight:700; width:16%;">Destinataire</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Finance / R&amp;D</td>
+          <td style="padding:10px 14px;">Les 7 recrutements prévus intègrent-ils le développement des fonctionnalités critiques manquantes (replanification, gestion des cycles) et les connecteurs Dedalus / NUMIH ?</td>
+          <td style="padding:10px 14px; color:var(--muted); font-size:12.5px;">Hicham / Aurélie</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Organisation</td>
+          <td style="padding:10px 14px;">Est-il vraiment pertinent de recruter 5 FTEs sur 7 en R&amp;D / Tech alors que le Delivery n'est pas industrialisé et que le Support Client est inexistant ?</td>
+          <td style="padding:10px 14px; color:var(--muted); font-size:12.5px;">Direction</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Delivery</td>
+          <td style="padding:10px 14px;">La relation avec les consultants externes en delivery est-elle efficace ? (Christophe N., réseau Christophe, Oresis) Pouvez-vous donner plus de détails sur l'organisation actuelle ?</td>
+          <td style="padding:10px 14px; color:var(--muted); font-size:12.5px;">Aurélie / Thierry</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Commercial</td>
+          <td style="padding:10px 14px;">Qu'est-ce qui explique le recrutement aussi important de commerciaux en 2027 ? Sauf excellente concrétisation des ventes 2026–2027, l'augmentation à 45 personnes semble excessive au regard de l'incertitude sur le CA.</td>
+          <td style="padding:10px 14px; color:var(--muted); font-size:12.5px;">Hicham / Allan</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Delivery</td>
+          <td style="padding:10px 14px;">Quels sont les quick wins à aller chercher sur Predict pour accélérer l'adoption et préparer la pérennisation ?</td>
+          <td style="padding:10px 14px; color:var(--muted); font-size:12.5px;">Aurélie / Éloïse</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Levée de fonds</td>
+          <td style="padding:10px 14px;">Quelle equity story ? Quelle exit envisagée (industriel, PE, IPO) ? À quel horizon ?</td>
+          <td style="padding:10px 14px; color:var(--muted); font-size:12.5px;">Hicham / Alexandre A.</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Levée de fonds</td>
+          <td style="padding:10px 14px;">Quel Business Plan en interne retenir pour la levée, notamment au vu des incertitudes sur les revenus 2027 ?</td>
+          <td style="padding:10px 14px; color:var(--muted); font-size:12.5px;">Hicham / Alexandre A.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════════════ 8 — RÉCAP RECOS ═══════════════ -->
+  <div id="recos" class="section-header">
+    <div class="section-num">8</div>
+    <h2>Récapitulatif des Recommandations</h2>
+  </div>
+
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse; font-size:13.5px;">
+      <thead>
+        <tr style="background:var(--blue-dark); color:white;">
+          <th style="padding:11px 14px; text-align:left; font-weight:700; width:12%;">Échéance</th>
+          <th style="padding:11px 14px; text-align:left; font-weight:700; width:14%;">Domaine</th>
+          <th style="padding:11px 14px; text-align:left; font-weight:700;">Recommandation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag urgent">Mai 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Delivery</td>
+          <td style="padding:10px 14px;">Nommer un CSM dédié au succès des déploiements HR Planner et Predict</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag urgent">Mai 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Marketing</td>
+          <td style="padding:10px 14px;">Post LinkedIn pour chaque client satisfait (40–50 posts en 2026) + contenus ROI sur réseaux sociaux</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag urgent">Mai 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Commercial</td>
+          <td style="padding:10px 14px;">Sécuriser ≥ 5 prospects HOP'EN 2 avec communication proactive (deadline 29 mai 2026)</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag urgent">Mai 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Organisation</td>
+          <td style="padding:10px 14px;">Établir un tableau de bord mensuel des KPI clés (pipeline, AMI, roadmap, finances…)</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag urgent">Mai 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">R&amp;D / QA</td>
+          <td style="padding:10px 14px;">Renforcer les ressources QA ; envisager Claude Code pour la productivité dev ; formaliser la répartition Data/Back/SSI</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag short">Juin 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Delivery</td>
+          <td style="padding:10px 14px;">Mise en place des logs d'utilisation, copils d'adoption mensuels, données réelles, support technique</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag short">Juin 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Delivery</td>
+          <td style="padding:10px 14px;">Définir des métriques de réussite pour les projets AMI (prises de commandes additionnelles, logs, taux de transformation)</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag short">Juin 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Organisation</td>
+          <td style="padding:10px 14px;">Resserrer les Boards sur un rythme trimestriel et partager le tableau de bord mensuel avec Extens</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag short">Juillet 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">QA</td>
+          <td style="padding:10px 14px;">Déployer SonarQube pour l'analyse statique de code</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag short">Juillet 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Support</td>
+          <td style="padding:10px 14px;">Créer un poste support technique (temps partagé Delivery au démarrage)</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag mid">Sept. 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Delivery</td>
+          <td style="padding:10px 14px;">Mandater un cabinet ROI à coût mutualisé pour les 25 sites pilotes</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag mid">Sept. 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Support</td>
+          <td style="padding:10px 14px;">Prévoir un agent IA pour le traitement des tickets support</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag mid">Oct. 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Product</td>
+          <td style="padding:10px 14px;">Livrer les fonctionnalités critiques HR Planner (replanification, cycles, connecteurs NUMIH/Dedalus) via ressources externes</td>
+        </tr>
+        <tr style="background:var(--blue-pale); border-bottom:1px dashed var(--border);">
+          <td style="padding:10px 14px;"><span class="tag mid">Fin 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">Product</td>
+          <td style="padding:10px 14px;">Mettre en place la méthode RICE pour priorisation produit ; structurer 2 squads dédiées par logiciel</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 14px;"><span class="tag mid">Déc. 2026</span></td>
+          <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600;">R&amp;D Data</td>
+          <td style="padding:10px 14px;">Préparer un soutien Delivery pour Zakaria afin d'éviter l'enlisement des projets d'intégration clients</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- ═══════════════ 9 — PMO ═══════════════ -->
+  <div id="pmo" class="section-header">
+    <div class="section-num">9</div>
+    <h2>Plan PMO — Suivi des Tâches</h2>
+  </div>
+
+  <!-- summary bar -->
+  <div id="pmo-summary" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px;"></div>
+
+  <div style="margin-bottom:14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <span style="font-size:13px; color:var(--muted);">Filtrer :</span>
+    <button onclick="filterPMO('all')"  id="f-all"  class="pmo-filter active">Toutes</button>
+    <button onclick="filterPMO('0')"    id="f-0"    class="pmo-filter">Non démarré (0%)</button>
+    <button onclick="filterPMO('mid')"  id="f-mid"  class="pmo-filter">En cours (1–99%)</button>
+    <button onclick="filterPMO('100')"  id="f-100"  class="pmo-filter">Terminé (100%)</button>
+    <span style="margin-left:auto; font-size:12.5px; color:var(--muted);" id="pmo-count"></span>
+  </div>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse; font-size:13.5px;" id="pmo-table">
+      <thead>
+        <tr style="background:var(--blue-dark); color:white;">
+          <th style="padding:11px 14px; text-align:left; width:4%;">#</th>
+          <th style="padding:11px 14px; text-align:left; width:11%;">Échéance</th>
+          <th style="padding:11px 14px; text-align:left; width:12%;">Domaine</th>
+          <th style="padding:11px 14px; text-align:left;">Action</th>
+          <th style="padding:11px 14px; text-align:left; width:12%;">Responsable</th>
+          <th style="padding:11px 14px; text-align:center; width:16%;">Avancement</th>
+          <th style="padding:11px 14px; text-align:left; width:14%;">Commentaire</th>
+        </tr>
+      </thead>
+      <tbody id="pmo-body"></tbody>
+    </table>
+  </div>
+
+  <p style="margin-top:8px; font-size:12px; color:var(--muted);">Glisser le curseur pour modifier l'avancement · Cliquer dans le commentaire pour annoter · Données sauvegardées localement.</p>
+
+</div>
+
+<style>
+  .pmo-filter {
+    font-family: inherit; font-size: 12.5px; padding: 5px 14px;
+    border: 1.5px solid var(--border); border-radius: 20px;
+    background: var(--white); color: var(--muted); cursor: pointer; transition: all 0.15s;
+  }
+  .pmo-filter:hover, .pmo-filter.active {
+    background: var(--blue-dark); color: white; border-color: var(--blue-dark);
+  }
+  .pmo-comment {
+    font-size: 12px; color: var(--muted); background: transparent;
+    border: none; border-bottom: 1px dashed var(--border);
+    width: 100%; outline: none; font-family: inherit; padding: 2px 0;
+  }
+  .pmo-comment:focus { border-bottom-color: var(--blue-mid); color: var(--text); }
+
+  /* progress bar track */
+  .prog-wrap { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .prog-label { font-size:12px; font-weight:700; min-width:36px; text-align:center; }
+  .prog-bar-bg {
+    width:100%; height:7px; background:#dde8f0; border-radius:4px; overflow:hidden;
+  }
+  .prog-bar-fill { height:100%; border-radius:4px; transition:width 0.2s; }
+  input[type=range].prog-slider {
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:4px; border-radius:2px; outline:none; cursor:pointer;
+    background: linear-gradient(to right, var(--fill-color, #2a6f8f) 0%, var(--fill-color, #2a6f8f) var(--val,0%), #dde8f0 var(--val,0%), #dde8f0 100%);
+  }
+  input[type=range].prog-slider::-webkit-slider-thumb {
+    -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
+    background:var(--fill-color,#2a6f8f); border:2px solid white;
+    box-shadow:0 1px 4px rgba(0,0,0,0.2); cursor:pointer;
+  }
+  input[type=range].prog-slider::-moz-range-thumb {
+    width:14px; height:14px; border-radius:50%; background:var(--fill-color,#2a6f8f);
+    border:2px solid white; box-shadow:0 1px 4px rgba(0,0,0,0.2); cursor:pointer;
+  }
+  .pmo-sum-card {
+    background:var(--white); border:1.5px solid var(--border); border-radius:8px;
+    padding:14px 16px; text-align:center;
+  }
+  .pmo-sum-val { font-size:24px; font-weight:700; line-height:1; }
+  .pmo-sum-lbl { font-size:11.5px; color:var(--muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.5px; }
+</style>
+
+<script>
+const PMO_TASKS = [
+  { id:1,  deadline:'Mai 2026',    domain:'Commercial',  action:"Sécuriser ≥ 5 prospects HOP'EN 2 avec communication proactive (deadline 29 mai 2026)", owner:'Hicham / Aurélie / Allan', pct:20, comment:'' },
+  { id:2,  deadline:'Mai 2026',    domain:'Delivery',    action:'Nommer un CSM dédié au succès des déploiements HR Planner et Predict', owner:'Aurélie', pct:0, comment:'' },
+  { id:3,  deadline:'Mai 2026',    domain:'Marketing',   action:'Lancer les posts LinkedIn clients satisfaits (objectif 40–50 posts en 2026) + contenus ROI réseaux sociaux', owner:'Gaëlle', pct:0, comment:'' },
+  { id:4,  deadline:'Mai 2026',    domain:'Organisation',action:'Établir un tableau de bord mensuel des KPI CODIR (pipeline, AMI, roadmap, finances)', owner:'Aurélie / Hicham', pct:0, comment:'' },
+  { id:5,  deadline:'Mai 2026',    domain:'R&D / QA',    action:'Renforcer les ressources QA ; envisager Claude Code pour la productivité dev', owner:'Alexandre (CPO)', pct:0, comment:'' },
+  { id:6,  deadline:'Mai 2026',    domain:'R&D',         action:'Formaliser la répartition des responsabilités Data / Back-end / SSI', owner:'Zakaria / Han', pct:0, comment:'' },
+  { id:7,  deadline:'Juin 2026',   domain:'Delivery',    action:"Mise en place des logs d'utilisation, copils d'adoption mensuels, données réelles en production", owner:'CSM + Éloïse', pct:0, comment:'' },
+  { id:8,  deadline:'Juin 2026',   domain:'Delivery',    action:'Définir les métriques de réussite pour les projets AMI (commandes additionnelles, logs, taux de transformation)', owner:'Aurélie / CSM', pct:0, comment:'' },
+  { id:9,  deadline:'Juin 2026',   domain:'Organisation',action:'Resserrer les Boards sur un rythme trimestriel ; partager le tableau de bord mensuel avec Extens', owner:'Hicham', pct:0, comment:'' },
+  { id:10, deadline:'Juillet 2026',domain:'QA',          action:"Déployer SonarQube pour l'analyse statique de code (pré-prod et prod)", owner:'Alexandre (CPO)', pct:0, comment:'' },
+  { id:11, deadline:'Juillet 2026',domain:'Support',     action:'Créer un poste support technique (temps partagé Delivery au démarrage)', owner:'Aurélie', pct:0, comment:'' },
+  { id:12, deadline:'Sept. 2026',  domain:'Delivery',    action:'Mandater un cabinet spécialisé en mesure de ROI à coût mutualisé pour les 25 sites pilotes', owner:'Extens + Aurélie', pct:0, comment:'' },
+  { id:13, deadline:'Sept. 2026',  domain:'Support',     action:"Déployer un agent IA pour le traitement des tickets support", owner:'Alexandre (CPO)', pct:0, comment:'' },
+  { id:14, deadline:'Oct. 2026',   domain:'Product',     action:'Livrer les fonctionnalités critiques HR Planner : replanification, cycles, connecteurs NUMIH/Dedalus (via ressources externes)', owner:'Alexandre / Yasmine', pct:0, comment:'' },
+  { id:15, deadline:'Fin 2026',    domain:'Product',     action:'Mettre en place la méthode RICE pour priorisation produit ; structurer 2 squads dédiées par logiciel', owner:'Alexandre (CPO)', pct:0, comment:'' },
+  { id:16, deadline:'Déc. 2026',   domain:'R&D Data',    action:"Préparer un soutien Delivery pour Zakaria (projets d'intégration clients)", owner:'Aurélie / Zakaria', pct:0, comment:'' },
+];
+
+let tasks = JSON.parse(localStorage.getItem('pmo_tasks_v2') || 'null') || PMO_TASKS.map(t => ({...t}));
+let currentFilter = 'all';
+
+function save() { try { localStorage.setItem('pmo_tasks_v2', JSON.stringify(tasks)); } catch(e){} }
+
+function pctColor(p) {
+  if (p === 0)   return '#7a9bb8';
+  if (p === 100) return '#2e7d4f';
+  if (p >= 60)   return '#2a6f8f';
+  return '#c87820';
+}
+
+function pctLabel(p) {
+  if (p === 0)   return 'Non démarré';
+  if (p === 100) return 'Terminé ✓';
+  if (p >= 75)   return 'Presque fini';
+  if (p >= 50)   return 'En bonne voie';
+  return 'En cours';
+}
+
+function deadlineClass(d) {
+  if (d.includes('Mai')) return 'urgent';
+  if (d.includes('Juin') || d.includes('Juillet')) return 'short';
+  return 'mid';
+}
+
+function renderSummary() {
+  const total = tasks.length;
+  const done  = tasks.filter(t => t.pct === 100).length;
+  const going = tasks.filter(t => t.pct > 0 && t.pct < 100).length;
+  const notStarted = tasks.filter(t => t.pct === 0).length;
+  const avg   = Math.round(tasks.reduce((s,t) => s + t.pct, 0) / total);
+
+  document.getElementById('pmo-summary').innerHTML = `
+    <div class="pmo-sum-card"><div class="pmo-sum-val" style="color:var(--blue-mid)">${avg}%</div><div class="pmo-sum-lbl">Avancement global</div></div>
+    <div class="pmo-sum-card"><div class="pmo-sum-val" style="color:#2e7d4f">${done}</div><div class="pmo-sum-lbl">Terminées</div></div>
+    <div class="pmo-sum-card"><div class="pmo-sum-val" style="color:#c87820">${going}</div><div class="pmo-sum-lbl">En cours</div></div>
+    <div class="pmo-sum-card"><div class="pmo-sum-val" style="color:#7a9bb8">${notStarted}</div><div class="pmo-sum-lbl">Non démarrées</div></div>
+  `;
+}
+
+function renderPMO() {
+  renderSummary();
+  const body = document.getElementById('pmo-body');
+  const filtered = tasks.filter(t => {
+    if (currentFilter === 'all') return true;
+    if (currentFilter === '0')   return t.pct === 0;
+    if (currentFilter === '100') return t.pct === 100;
+    if (currentFilter === 'mid') return t.pct > 0 && t.pct < 100;
+    return true;
+  });
+  document.getElementById('pmo-count').textContent = filtered.length + ' / ' + tasks.length + ' tâches';
+
+  body.innerHTML = filtered.map((t, i) => {
+    const col = pctColor(t.pct);
+    return `
+    <tr style="border-bottom:1px dashed var(--border); ${i%2===1?'background:var(--blue-pale)':''}">
+      <td style="padding:10px 14px; color:var(--muted); font-size:12px;">${t.id}</td>
+      <td style="padding:10px 14px;"><span class="tag ${deadlineClass(t.deadline)}">${t.deadline}</span></td>
+      <td style="padding:10px 14px; color:var(--blue-mid); font-weight:600; font-size:13px;">${t.domain}</td>
+      <td style="padding:10px 14px; line-height:1.5;">${t.action}</td>
+      <td style="padding:10px 14px; font-size:12.5px; color:var(--muted);">${t.owner}</td>
+      <td style="padding:10px 14px;">
+        <div class="prog-wrap">
+          <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+            <span class="prog-label" style="color:${col}">${t.pct}%</span>
+            <span style="font-size:10.5px;color:var(--muted);font-style:italic;">${pctLabel(t.pct)}</span>
+          </div>
+          <input type="range" class="prog-slider" min="0" max="100" step="5" value="${t.pct}"
+            style="--val:${t.pct}%; --fill-color:${col}; width:100%;"
+            oninput="updatePct(${t.id}, this.value, this)"
+            onchange="updatePct(${t.id}, this.value, this)">
+        </div>
+      </td>
+      <td style="padding:10px 14px;">
+        <input class="pmo-comment" value="${t.comment.replace(/"/g,'&quot;')}" placeholder="Annoter…"
+          onblur="updateComment(${t.id}, this.value)">
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function updatePct(id, val, el) {
+  const t = tasks.find(x => x.id === id);
+  t.pct = parseInt(val);
+  const col = pctColor(t.pct);
+  el.style.setProperty('--val', t.pct + '%');
+  el.style.setProperty('--fill-color', col);
+  const row = el.closest('tr');
+  row.querySelector('.prog-label').textContent = t.pct + '%';
+  row.querySelector('.prog-label').style.color = col;
+  row.querySelector('span[style*="italic"]').textContent = pctLabel(t.pct);
+  save();
+  renderSummary();
+}
+
+function updateComment(id, val) {
+  const t = tasks.find(x => x.id === id);
+  t.comment = val;
+  save();
+}
+
+function filterPMO(f) {
+  currentFilter = f;
+  document.querySelectorAll('.pmo-filter').forEach(b => b.classList.remove('active'));
+  document.getElementById('f-' + f).classList.add('active');
+  renderPMO();
+}
+
+renderPMO();
+</script>
+
+</div><!-- /main-content -->
+
+<footer>
+  Scan Organisationnel — OptaCare · Avril 2026 · Réalisé par Extens (Arnaud Houette &amp; Kévin Mainaud) · Diffusion strictement limitée à Hicham Chehade et équipe Extens
+</footer>
+
+</body>
+</html>
